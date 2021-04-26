@@ -12,4 +12,4 @@
 (development
  (depends-on "f")
  (depends-on "ert-runner")
- (depends-on "find-file-in-project" "6.0.0"))
+ (depends-on "find-file-in-project" "5.7.13"))
