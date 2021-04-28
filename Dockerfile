@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /install
 
-# emacs
+# ---------- emacs ----------
 
 ## install nix
 ## based on nix docs
@@ -28,3 +28,18 @@ RUN nix-env -j8 -iA cachix -f https://cachix.org/api/v1/install
 RUN USER=root cachix use emacs-ci
 
 RUN nix-env -iA emacs-27-1 -f "https://github.com/purcell/nix-emacs-ci/archive/master.tar.gz"
+
+# ---------- python ----------
+
+COPY requirements.txt .
+COPY requirements-rpc.txt .
+COPY requirements-dev.txt .
+COPY requirements-rpc3.6.txt .
+
+RUN python -m pip install --upgrade pip \
+    && pip install -r requirements.txt --upgrade \
+    && pip install -r requirements-rpc.txt --upgrade \
+    && pip install -r requirements-dev.txt --upgrade \
+    && pip install -r requirements-rpc3.6.txt --upgrade \
+    && pip install coveralls \
+    && python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
