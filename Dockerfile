@@ -1,13 +1,10 @@
-FROM ubuntu:20.04
-
-# use the base of from github actions: https://github.com/actions/virtual-environments/blob/34ea1d0440d0c8801081276b279d1b232f009a1b/images/linux/Ubuntu2004-README.md
-# if we any software then install version from this page
+FROM python:3.8.9-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    curl=7.68.0-1ubuntu2.5 \
-    sudo=1.8.31-1ubuntu1.2 \
-    xz-utils=5.2.4-1ubuntu1 \
+    curl \
+    sudo \
+    xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /install
