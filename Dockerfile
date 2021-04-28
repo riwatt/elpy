@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /install
-
 # ---------- emacs ----------
 
 ## install nix
@@ -38,6 +36,8 @@ RUN curl -L https://github.com/cask/cask/archive/master.zip -o master.zip \
     && cask --version
 
 # ---------- python ----------
+
+WORKDIR /src
 
 COPY requirements.txt .
 COPY requirements-rpc.txt .
