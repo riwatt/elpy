@@ -29,6 +29,14 @@ RUN USER=root cachix use emacs-ci
 
 RUN nix-env -iA emacs-27-1 -f "https://github.com/purcell/nix-emacs-ci/archive/master.tar.gz"
 
+# ---------- cask ----------
+
+ENV PATH=/var/opt/cask-master/bin:$PATH
+
+RUN curl -L https://github.com/cask/cask/archive/master.zip -o master.zip \
+    && unzip master.zip -d /var/opt/ \
+    && cask --version
+
 # ---------- python ----------
 
 COPY requirements.txt .
