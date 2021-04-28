@@ -51,3 +51,14 @@ RUN python -m pip install --upgrade pip \
     && pip install -r requirements-rpc3.6.txt --upgrade \
     && pip install coveralls \
     && python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
+
+COPY . .
+
+# - run tests based on test.yml
+# - emacs tests:
+#   - cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration
+# - python tests:
+#   - nosetests
+# - coveralls:
+#   - coverage run -m nose.__main__
+#   - coveralls
