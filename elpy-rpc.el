@@ -229,7 +229,7 @@ needed packages from `elpy-rpc--get-package-list'."
   "Return the list of packages to be installed in the RPC virtualenv."
   (let ((rpc-python-version (elpy-rpc--get-python-version)))
     (if (version< rpc-python-version "3.6.0")
-        '("jedi" "flake8" "autopep8" "yapf" "rope")
+        '("jedi==0.17.2" "flake8" "autopep8" "yapf" "rope")
       '("jedi==0.17.2" "flake8" "autopep8" "yapf" "black" "rope"))))
 
 (defun elpy-rpc--get-python-version ()
