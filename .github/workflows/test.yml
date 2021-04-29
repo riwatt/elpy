@@ -77,5 +77,5 @@ jobs:
       run: |
         if [[ ${{ matrix.python_version }} > 3 ]] ; then
           coverage run -m nose.__main__
-          coveralls ;
+          coveralls --service=github;
         fi
