@@ -35,9 +35,13 @@ RUN curl -L https://github.com/cask/cask/archive/master.zip -o master.zip \
     && unzip master.zip -d /var/opt/ \
     && cask --version
 
-# ---------- python ----------
-
 WORKDIR /src
+
+COPY Cask .
+
+RUN cask install
+
+# ---------- python ----------
 
 COPY requirements.txt .
 COPY requirements-rpc.txt .
@@ -56,7 +60,7 @@ COPY . .
 
 # - run tests based on test.yml
 # - emacs tests:
-#   - cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration
+#   - PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration
 # - python tests:
 #   - nosetests
 # - coveralls:
