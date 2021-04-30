@@ -61,6 +61,8 @@ jobs:
         fi
         pip install coveralls
         python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
+        echo PIP FREEZE
+        pip freeze
     # Run tests
     - name: Run Emacs tests
       uses: nick-invision/retry@v2
