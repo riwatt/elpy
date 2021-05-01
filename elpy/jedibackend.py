@@ -54,9 +54,9 @@ class JediBackend(object):
         self.project_root = project_root
         self.environment = None
         self.x = environment_binaries_path
-        if environment_binaries_path is not None:
-            self.environment = jedi.create_environment(environment_binaries_path,
-                                                       safe=False)
+        # if environment_binaries_path is not None:
+        #     self.environment = jedi.create_environment(environment_binaries_path,
+        #                                                safe=False)
         # self.completions = {}
         # sys.path.append(project_root)
         # # Backward compatibility to jedi<17
@@ -71,7 +71,7 @@ class JediBackend(object):
         #     self.rpc_get_names = self.rpc_get_names_jedi16
 
     def __repr__(self):
-        return '[i am fake jedi backend B::%s::%s]' % (self.project_root, self.x)
+        return '[i am fake jedi backend C::%s::%s::%s]' % (self.project_root, self.x, jedi.__version__)
 
     def rpc_get_completions(self, filename, source, offset):
         return [{'name': 'X-name',
