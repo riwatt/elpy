@@ -12,8 +12,8 @@ import re
 
 import jedi
 
-# from elpy import rpc
-# from elpy.rpc import Fault
+from elpy import rpc
+from elpy.rpc import Fault
 
 # # in case pkg_resources is not properly installed
 # # (see https://github.com/jorgenschaefer/elpy/issues/1674).
