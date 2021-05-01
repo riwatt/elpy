@@ -54,9 +54,9 @@ class JediBackend(object):
         self.project_root = project_root
         self.environment = None
         self.x = environment_binaries_path
-        # if environment_binaries_path is not None:
-        #     self.environment = jedi.create_environment(environment_binaries_path,
-        #                                                safe=False)
+        if environment_binaries_path is not None:
+            self.environment = jedi.create_environment(environment_binaries_path,
+                                                       safe=False)
         # self.completions = {}
         # sys.path.append(project_root)
         # # Backward compatibility to jedi<17
