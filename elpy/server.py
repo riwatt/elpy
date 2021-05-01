@@ -97,10 +97,10 @@ class ElpyRPCServer(JSONRPCServer):
         #             'meta': 'GSRC-%s' % repr(get_source(source))}]
         results = self._call_backend("rpc_get_completions", [], filename,
                                      get_source(source), offset)
-        results = [{'name': 'AAA-FN-%s' % repr(filename),
-                    'suffix': 'AAA-SRC-%s' % repr(source),
-                    'annotation': 'AAA-OFFSET-%s' % repr(offset),
-                    'meta': 'AAA-GSRC-%s' % repr(get_source(source))}]
+        results = [{'name': 'BBB-FN-%s' % repr(filename),
+                    'suffix': 'BBB-SRC-%s' % repr(source),
+                    'annotation': 'BBB-OFFSET-%s' % repr(offset),
+                    'meta': 'BBB-RESTYPE-%s' % type(results)}]
         # Uniquify by name
         results = list(dict((res['name'], res) for res in results)
                        .values())
