@@ -53,21 +53,24 @@ class JediBackend(object):
     def __init__(self, project_root, environment_binaries_path):
         self.project_root = project_root
         self.environment = None
-        if environment_binaries_path is not None:
-            self.environment = jedi.create_environment(environment_binaries_path,
-                                                       safe=False)
-        self.completions = {}
-        sys.path.append(project_root)
-        # Backward compatibility to jedi<17
-        if not JEDISUP17:  # pragma: no cover
-            self.rpc_get_completions = self.rpc_get_completions_jedi16
-            self.rpc_get_docstring = self.rpc_get_docstring_jedi16
-            self.rpc_get_definition = self.rpc_get_definition_jedi16
-            self.rpc_get_assignment = self.rpc_get_assignment_jedi16
-            self.rpc_get_calltip = self.rpc_get_calltip_jedi16
-            self.rpc_get_oneline_docstring = self.rpc_get_oneline_docstring_jedi16
-            self.rpc_get_usages = self.rpc_get_usages_jedi16
-            self.rpc_get_names = self.rpc_get_names_jedi16
+        # if environment_binaries_path is not None:
+        #     self.environment = jedi.create_environment(environment_binaries_path,
+        #                                                safe=False)
+        # self.completions = {}
+        # sys.path.append(project_root)
+        # # Backward compatibility to jedi<17
+        # if not JEDISUP17:  # pragma: no cover
+        #     self.rpc_get_completions = self.rpc_get_completions_jedi16
+        #     self.rpc_get_docstring = self.rpc_get_docstring_jedi16
+        #     self.rpc_get_definition = self.rpc_get_definition_jedi16
+        #     self.rpc_get_assignment = self.rpc_get_assignment_jedi16
+        #     self.rpc_get_calltip = self.rpc_get_calltip_jedi16
+        #     self.rpc_get_oneline_docstring = self.rpc_get_oneline_docstring_jedi16
+        #     self.rpc_get_usages = self.rpc_get_usages_jedi16
+        #     self.rpc_get_names = self.rpc_get_names_jedi16
+
+    def __repr__(self):
+        return 'i am fake jedi backend A'
 
     def rpc_get_completions(self, filename, source, offset):
         return [{'name': 'X-name',
