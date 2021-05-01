@@ -69,7 +69,7 @@ jobs:
       with:
         timeout_minutes: 5
         max_attempts: 3
-        command: cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration
+        command: cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration test/elpy-company--cache-name-test.el test/elpy-company-backend-test.el
     - name: Run Python tests
       run: nosetests
     # Coveralls
