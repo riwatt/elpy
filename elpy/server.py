@@ -98,9 +98,9 @@ class ElpyRPCServer(JSONRPCServer):
         results = self._call_backend("rpc_get_completions", [], filename,
                                      get_source(source), offset)
         results = [{'name': 'BBB-BACKEND-%s' % repr(self.backend),
-                    'suffix': 'BBB-SRC-%s' % repr(source),
-                    'annotation': 'BBB-OFFSET-%s' % repr(offset),
-                    'meta': 'BBB-RESTYPE-%s' % type(results)}]
+                    'suffix': 's',
+                    'annotation': 'a',
+                    'meta': 'm'}]
         # Uniquify by name
         results = list(dict((res['name'], res) for res in results)
                        .values())
