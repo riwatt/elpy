@@ -569,6 +569,7 @@ result and return that."
   "Call METHOD-NAME with PARAMS in the current RPC backend.
 
 Returns the result, blocking until this arrived."
+  (message "CALLBLOCKING: %s %s" method-name params)
   (let* ((result-arrived nil)
          (error-occured nil)
          (result-value nil)
@@ -580,13 +581,20 @@ Returns the result, blocking until this arrived."
                                   (lambda (err)
                                     (setq error-object err
                                           error-occured t)))))
+    (message "BEFORE PROMISE-WAIT")
     (elpy-promise-wait promise elpy-rpc-timeout)
+    (message "AFTER PROMISE-WAIT")
+    (message "ERROR-OCCURED %s" error-occured)
+    (message "RESULT-ARRIVED %s" result-arrived)
     (cond
      (error-occured
+      (message "ERROR-OBJECT: %s" error-object)
       (elpy-rpc--default-error-callback error-object))
      (result-arrived
+      (message "RESULT-VALUE: %s" result-value)
       result-value)
      (t
+      (message "TIMEOUT")
       (error "Timeout during RPC call %s from backend"
              method-name)))))
 
