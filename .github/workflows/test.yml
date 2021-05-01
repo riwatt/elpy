@@ -71,7 +71,10 @@ jobs:
         max_attempts: 3
         command: cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration test/elpy-company--cache-name-test.el test/elpy-company-backend-test.el
     - name: Run Python tests
-      run: nosetests
+      run: |
+        python -c 'from elpy import jedibackend'
+        ~/.emacs.d/elpy/rpc-venv/bin/python -c'from elpy import jedibackend'
+
     # Coveralls
     - name: Coveralls
       env:
