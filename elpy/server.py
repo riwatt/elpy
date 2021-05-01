@@ -97,7 +97,7 @@ class ElpyRPCServer(JSONRPCServer):
         #             'meta': 'GSRC-%s' % repr(get_source(source))}]
         results = self._call_backend("rpc_get_completions", [], filename,
                                      get_source(source), offset)
-        results = [{'name': 'BBB-FN-%s' % repr(filename),
+        results = [{'name': 'BBB-BACKEND-%s' % repr(self.backend),
                     'suffix': 'BBB-SRC-%s' % repr(source),
                     'annotation': 'BBB-OFFSET-%s' % repr(offset),
                     'meta': 'BBB-RESTYPE-%s' % type(results)}]
