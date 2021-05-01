@@ -88,6 +88,10 @@ class JediBackend(object):
                 for proposal in proposals]
 
     def rpc_get_completions_jedi16(self, filename, source, offset):
+        return [{'name': 'Y-name',
+                 'suffix': 'Y-suffix',
+                 'annotation': 'Y-annotation',
+                 'meta': 'Y-meta'}]
         # Backward compatibility to jedi<17
         line, column = pos_to_linecol(source, offset)
         proposals = run_with_debug(jedi, 'completions',
