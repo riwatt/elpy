@@ -71,7 +71,7 @@ class JediBackend(object):
         #     self.rpc_get_names = self.rpc_get_names_jedi16
 
     def __repr__(self):
-        return '[i am fake jedi backend C::%s::%s::%s]' % (self.project_root, self.x, jedi.__version__)
+        return '[i am fake jedi backend D::%s::%s::%s::%s]' % (self.project_root, self.x, jedi.__version__, jedi.__path__)
 
     def rpc_get_completions(self, filename, source, offset):
         return [{'name': 'X-name',
