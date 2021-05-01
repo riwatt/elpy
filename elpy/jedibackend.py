@@ -24,7 +24,7 @@ except ImportError:  # pragma: no cover
         raise Fault("`pkg_resources` could not be imported, "
                     "please reinstall Elpy RPC virtualenv with"
                     " `M-x elpy-rpc-reinstall-virtualenv`", code=400)
-# JEDISUP17 = parse_version(jedi.__version__) >= parse_version("0.17.0")
+JEDISUP17 = parse_version(jedi.__version__) >= parse_version("0.17.0")
 
 
 # def convert_posix_path(path):
