@@ -43,10 +43,17 @@ RUN cask install
 
 # ---------- python ----------
 
-COPY requirements-ci.txt .
+COPY requirements.txt .
+COPY requirements-rpc.txt .
+COPY requirements-dev.txt .
+COPY requirements-dev2.txt .
 
 RUN python -m pip install --upgrade pip \
-    && pip install -r requirements-ci.txt \
+    && pip install -r requirements.txt --upgrade \
+    && pip install -r requirements-rpc.txt --upgrade \
+    && pip install -r requirements-dev.txt --upgrade \
+    && pip install -r requirements-dev2.txt --upgrade \
+    && pip install coveralls \
     && python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
 
 COPY . .
