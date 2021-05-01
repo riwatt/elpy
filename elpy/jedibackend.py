@@ -53,6 +53,7 @@ class JediBackend(object):
     def __init__(self, project_root, environment_binaries_path):
         self.project_root = project_root
         self.environment = None
+        self.x = environment_binaries_path
         # if environment_binaries_path is not None:
         #     self.environment = jedi.create_environment(environment_binaries_path,
         #                                                safe=False)
@@ -70,7 +71,7 @@ class JediBackend(object):
         #     self.rpc_get_names = self.rpc_get_names_jedi16
 
     def __repr__(self):
-        return 'i am fake jedi backend A'
+        return '[i am fake jedi backend B::%s::%s]' % (self.project_root, self.x)
 
     def rpc_get_completions(self, filename, source, offset):
         return [{'name': 'X-name',
