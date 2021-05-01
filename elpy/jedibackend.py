@@ -10,7 +10,7 @@ import sys
 import traceback
 import re
 
-# import jedi
+import jedi
 
 # from elpy import rpc
 # from elpy.rpc import Fault
