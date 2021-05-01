@@ -57,9 +57,11 @@ class ElpyRPCServer(JSONRPCServer):
         self.env = options["environment"]
 
         if jedibackend:
-            self.backend = jedibackend.JediBackend(self.project_root, self.env)
+            self.backend = 'GOTBACKEND'
+            # self.backend = jedibackend.JediBackend(self.project_root, self.env)
         else:
-            self.backend = None
+            self.backend = 'NO-BACKEND'
+            # self.backend = None
 
         return {
             'jedi_available': (self.backend is not None)
