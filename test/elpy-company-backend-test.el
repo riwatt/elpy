@@ -18,8 +18,7 @@
                          "variable_script"))
         (should (string= (mapconcat (lambda (cand) (cdr (assoc 'name cand)))
                                     ext-cand " ")
-                         "variable_shell variable_script"))
-	(should (string= "beta" "gamma"))))))
+                         "variable_shell variable_script"))))))
     ;;   ;; Test function completions
     ;;   (insert "\nfunction")
     ;;   (sleep-for 0.1)
