@@ -91,12 +91,16 @@ class ElpyRPCServer(JSONRPCServer):
         """Get a list of completion candidates for the symbol at offset.
 
         """
-        results = [{'name': 'FN-%s' % repr(filename),
-                    'suffix': 'SRC-%s' % repr(source),
-                    'annotation': 'OFFSET-%s' % repr(offset),
-                    'meta': 'GSRC-%s' % repr(get_source(source))}]
+        # results = [{'name': 'FN-%s' % repr(filename),
+        #             'suffix': 'SRC-%s' % repr(source),
+        #             'annotation': 'OFFSET-%s' % repr(offset),
+        #             'meta': 'GSRC-%s' % repr(get_source(source))}]
         # results = self._call_backend("rpc_get_completions", [], filename,
         #                              get_source(source), offset)
+        results = [{'name': 'AAA-FN-%s' % repr(filename),
+                    'suffix': 'AAA-SRC-%s' % repr(source),
+                    'annotation': 'AAA-OFFSET-%s' % repr(offset),
+                    'meta': 'AAA-GSRC-%s' % repr(get_source(source))}]
         # Uniquify by name
         results = list(dict((res['name'], res) for res in results)
                        .values())
