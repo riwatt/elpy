@@ -1,4 +1,4 @@
-FROM python:2.7-buster
+FROM python:3.5-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -46,13 +46,12 @@ RUN cask install
 COPY requirements.txt .
 COPY requirements-rpc.txt .
 COPY requirements-dev.txt .
-COPY requirements-dev2.txt .
+COPY requirements-rpc3.6.txt .
 
 RUN python -m pip install --upgrade pip \
     && pip install -r requirements.txt --upgrade \
     && pip install -r requirements-rpc.txt --upgrade \
     && pip install -r requirements-dev.txt --upgrade \
-    && pip install -r requirements-dev2.txt --upgrade \
     && pip install coveralls \
     && python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
 
