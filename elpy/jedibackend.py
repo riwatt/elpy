@@ -70,6 +70,10 @@ class JediBackend(object):
             self.rpc_get_names = self.rpc_get_names_jedi16
 
     def rpc_get_completions(self, filename, source, offset):
+        return [{'name': 'X-name',
+                 'suffix': 'X-suffix',
+                 'annotation': 'X-annotation',
+                 'meta': 'X-meta'}]
         line, column = pos_to_linecol(source, offset)
         proposals = run_with_debug(jedi, 'complete', code=source,
                                    path=filename,
