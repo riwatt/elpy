@@ -418,6 +418,9 @@ binaries used to create the virtualenv."
                          "-m" "pip" "install" "--upgrade"
                          (elpy-rpc--get-package-list))
                   0)
+          (message "Error output was:")
+          (message "-----------------")
+          (message (buffer-string))
           (message "Elpy failed to install some of the RPC dependencies, please use `elpy-config' to install them.")))
     (message "Some of Elpy's functionnalities will not work, please use `elpy-config' to install the needed python dependencies.")))
 
