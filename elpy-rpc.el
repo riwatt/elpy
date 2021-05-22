@@ -362,6 +362,7 @@ binaries used to create the virtualenv."
 (defun elpy-rpc--create-virtualenv (rpc-venv-path)
   "Create a virtualenv for the RPC in RPC-VENV-PATH."
   ;; venv cannot create a proper virtualenv from inside another virtualenv
+  (message "##> Creating virtualenv for path '%s'" rpc-venv-path)
   (let* ((elpy-rpc-virtualenv-path 'system)
          success
          (elpy-venv-buffname-visible "*elpy-virtualenv*")
@@ -370,23 +371,36 @@ binaries used to create the virtualenv."
       (kill-buffer elpy-venv-buffname))
     (when (get-buffer elpy-venv-buffname-visible)
       (kill-buffer elpy-venv-buffname-visible))
+    (message "##> env before activation")
+    (message "%s" (with-temp-buffer (call-process "bash" nil t nil "-c" "env | sort") (buffer-string)))
     (with-elpy-rpc-virtualenv-activated
+     (message "##> env after activation")
+     (message "%s" (with-temp-buffer (call-process "bash" nil t nil "-c" "env | sort") (buffer-string)))
+     (message "##> virtualenv executable '%s'" (executable-find "virtualenv"))
+     (message "##> venv -h exit code: %s" (call-process elpy-rpc-python-command nil nil nil "-m" "venv" "-h"))
+     (message "%s" (with-temp-buffer (call-process elpy-rpc-python-command nil t nil "-m" "venv" "-h") (buffer-string)))
+     (message "##> ensurepip -h exit code: %s" (call-process elpy-rpc-python-command nil nil nil "-m" "ensurepip" "-h"))
+     (message "%s" (with-temp-buffer (call-process elpy-rpc-python-command nil t nil "-m" "ensurepip" "-h") (buffer-string)))
      (cond
       ((and (= 0 (call-process elpy-rpc-python-command nil nil nil
                               "-m" "venv" "-h"))
            ;; see https://github.com/jorgenschaefer/elpy/issues/1756
            (= 0 (call-process elpy-rpc-python-command nil nil nil
                               "-m" "ensurepip" "-h")))
+       (message "##> we do venv")
        (with-current-buffer (get-buffer-create elpy-venv-buffname)
          (insert (concat "Running '" elpy-rpc-python-command " -m venv "
                          rpc-venv-path "':\n\n"))
+         (message "##> buffer: [%s]" (buffer-string))
          (setq success (call-process elpy-rpc-python-command nil t t
                                      "-m" "venv" rpc-venv-path))))
       ((executable-find "virtualenv")
+       (message "##> we do virtualenv")
        (with-current-buffer (get-buffer-create elpy-venv-buffname)
          (insert (concat "Running 'virtualenv -p "
                          elpy-rpc-python-command " " rpc-venv-path
                          "':\n\n"))
+         (message "##> buffer: [%s]" (buffer-string))
          (setq success (call-process "virtualenv" nil t t "-p"
                                      elpy-rpc-python-command rpc-venv-path))))
       (t
