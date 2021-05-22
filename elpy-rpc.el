@@ -413,11 +413,27 @@ binaries used to create the virtualenv."
   (if (y-or-n-p "Automatically install the RPC dependencies from PyPI (needed for completion, autoformatting and documentation) ? ")
       (with-temp-buffer
         (message "Elpy is installing the RPC dependencies...")
-        (when (/= (apply 'call-process elpy-rpc-python-command
+        (message "::> Package list is '%s'" (elpy-rpc--get-package-list))
+        (message "::> RPC command is '%s'" elpy-rpc-python-command)
+        (message "::> pwd:")
+        (message "%s" (with-temp-buffer (call-process "pwd" nil t nil) (buffer-string)))
+        (message "::> which python:")
+        (message "%s" (with-temp-buffer (call-process "which" nil t nil "python") (buffer-string)))
+        (message "::> python -V:")
+        (message "%s" (with-temp-buffer (call-process "python" nil t nil "-V") (buffer-string)))
+        (message "::> env:")
+        (message "%s" (with-temp-buffer (call-process "bash" nil t nil "-c" "env | sort") (buffer-string)))
+        (message "::> Start RPC install")
+        (setq process-results (apply 'call-process elpy-rpc-python-command
                          nil t nil
                          "-m" "pip" "install" "--upgrade"
-                         (elpy-rpc--get-package-list))
+                         (elpy-rpc--get-package-list)))
+        (when (/= process-results
                   0)
+          (message "::> Error process output was:")
+          (message "::> -------------------------")
+          (message (buffer-string))
+          (message "::> -------------------------")
           (message "Elpy failed to install some of the RPC dependencies, please use `elpy-config' to install them.")))
     (message "Some of Elpy's functionnalities will not work, please use `elpy-config' to install the needed python dependencies.")))
 
