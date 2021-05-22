@@ -67,4 +67,4 @@ jobs:
       with:
         timeout_minutes: 5
         max_attempts: 1
-        command: cask install ; PYTHONPATH="`pwd`" python -m pip install --upgrade jedi flake8 autopep8 yapf rope
+        command: cask install ; export PYTHONPATH="`pwd`" ; echo "env before" ; env | sort ; python -m venv ~/tmp-venv ; source ~/tmp-venv/bin/activate ; echo "env after" ; env | sort ; python -m pip install --upgrade jedi flake8 autopep8 yapf rope
