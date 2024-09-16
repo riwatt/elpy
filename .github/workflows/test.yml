@@ -1,10 +1,6 @@
-name: Tests
+name: Tests All
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+on: [push]
 
 jobs:
   build:
@@ -81,5 +77,5 @@ jobs:
       run: |
         if [[ ${{ matrix.python_version }} > 3 ]] ; then
           coverage run -m nose.__main__
-          coveralls ;
+          coveralls --service=github;
         fi
