@@ -59,7 +59,8 @@ class ElpyRPCServer(JSONRPCServer):
         if jedibackend:
             self.backend = jedibackend.JediBackend(self.project_root, self.env)
         else:
-            self.backend = None
+            self.backend = 'NO-BACKEND-A'
+            # self.backend = None
 
         return {
             'jedi_available': (self.backend is not None)
@@ -91,8 +92,16 @@ class ElpyRPCServer(JSONRPCServer):
         """Get a list of completion candidates for the symbol at offset.
 
         """
+        # results = [{'name': 'FN-%s' % repr(filename),
+        #             'suffix': 'SRC-%s' % repr(source),
+        #             'annotation': 'OFFSET-%s' % repr(offset),
+        #             'meta': 'GSRC-%s' % repr(get_source(source))}]
         results = self._call_backend("rpc_get_completions", [], filename,
                                      get_source(source), offset)
+        results = [{'name': 'BBB-BACKEND-%s' % repr(self.backend),
+                    'suffix': 's',
+                    'annotation': 'a',
+                    'meta': 'm'}]
         # Uniquify by name
         results = list(dict((res['name'], res) for res in results)
                        .values())

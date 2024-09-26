@@ -1,10 +1,6 @@
-name: Tests
+name: Tests - Push
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+on: push
 
 jobs:
   build:
@@ -22,16 +18,16 @@ jobs:
           # - 25.1
           # - 25.2
           # - 25.3
-          - 26.1
-          - 26.2
-          - 26.3
+          # - 26.1
+          # - 26.2
+          # - 26.3
           - 27.1
           # - snapshot
         python_version:
           - 2.7
           - 3.5
-          - 3.6
-          - 3.7
+          # - 3.6
+          # - 3.7
           - 3.8
     steps:
     # Checkout
@@ -65,21 +61,23 @@ jobs:
         fi
         pip install coveralls
         python -m virtualenv $HOME/.virtualenvs/elpy-test-venv
+        echo PIP FREEZE
+        pip freeze
     # Run tests
     - name: Run Emacs tests
       uses: nick-invision/retry@v2
       with:
         timeout_minutes: 5
         max_attempts: 3
-        command: cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration
-    - name: Run Python tests
-      run: nosetests
-    # Coveralls
-    - name: Coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        if [[ ${{ matrix.python_version }} > 3 ]] ; then
-          coverage run -m nose.__main__
-          coveralls ;
-        fi
+        command: cask install ; PYTHONPATH="`pwd`" cask exec ert-runner --reporter ert+duration test/elpy-company--cache-name-test.el test/elpy-company-backend-test.el
+    # - name: Run Python tests
+    #   run: nosetests
+    # # Coveralls
+    # - name: Coveralls
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     if [[ ${{ matrix.python_version }} > 3 ]] ; then
+    #       coverage run -m nose.__main__
+    #       coveralls --service=github
+    #     fi

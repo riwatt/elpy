@@ -27,6 +27,19 @@ except ImportError:  # pragma: no cover
 JEDISUP17 = parse_version(jedi.__version__) >= parse_version("0.17.0")
 
 
+def convert_posix_path(path):
+    if path is None:
+        return None
+    else:
+        return str(path)
+
+
+def convert_posix_paths(paths):
+    if paths is None:
+        return None
+    return map(convert_posix_path, paths)
+
+
 class JediBackend(object):
     """The Jedi backend class.
 
@@ -40,23 +53,31 @@ class JediBackend(object):
     def __init__(self, project_root, environment_binaries_path):
         self.project_root = project_root
         self.environment = None
-        if environment_binaries_path is not None:
-            self.environment = jedi.create_environment(environment_binaries_path,
-                                                       safe=False)
-        self.completions = {}
-        sys.path.append(project_root)
-        # Backward compatibility to jedi<17
-        if not JEDISUP17:  # pragma: no cover
-            self.rpc_get_completions = self.rpc_get_completions_jedi16
-            self.rpc_get_docstring = self.rpc_get_docstring_jedi16
-            self.rpc_get_definition = self.rpc_get_definition_jedi16
-            self.rpc_get_assignment = self.rpc_get_assignment_jedi16
-            self.rpc_get_calltip = self.rpc_get_calltip_jedi16
-            self.rpc_get_oneline_docstring = self.rpc_get_oneline_docstring_jedi16
-            self.rpc_get_usages = self.rpc_get_usages_jedi16
-            self.rpc_get_names = self.rpc_get_names_jedi16
+        self.x = environment_binaries_path
+        # if environment_binaries_path is not None:
+        #     self.environment = jedi.create_environment(environment_binaries_path,
+        #                                                safe=False)
+        # self.completions = {}
+        # sys.path.append(project_root)
+        # # Backward compatibility to jedi<17
+        # if not JEDISUP17:  # pragma: no cover
+        #     self.rpc_get_completions = self.rpc_get_completions_jedi16
+        #     self.rpc_get_docstring = self.rpc_get_docstring_jedi16
+        #     self.rpc_get_definition = self.rpc_get_definition_jedi16
+        #     self.rpc_get_assignment = self.rpc_get_assignment_jedi16
+        #     self.rpc_get_calltip = self.rpc_get_calltip_jedi16
+        #     self.rpc_get_oneline_docstring = self.rpc_get_oneline_docstring_jedi16
+        #     self.rpc_get_usages = self.rpc_get_usages_jedi16
+        #     self.rpc_get_names = self.rpc_get_names_jedi16
+
+    def __repr__(self):
+        return '[i am fake jedi backend D::%s::%s::%s::%s]' % (self.project_root, self.x, jedi.__version__, jedi.__path__)
 
     def rpc_get_completions(self, filename, source, offset):
+        return [{'name': 'X-name',
+                 'suffix': 'X-suffix',
+                 'annotation': 'X-annotation',
+                 'meta': 'X-meta'}]
         line, column = pos_to_linecol(source, offset)
         proposals = run_with_debug(jedi, 'complete', code=source,
                                    path=filename,
@@ -71,6 +92,10 @@ class JediBackend(object):
                 for proposal in proposals]
 
     def rpc_get_completions_jedi16(self, filename, source, offset):
+        return [{'name': 'Y-name',
+                 'suffix': 'Y-suffix',
+                 'annotation': 'Y-annotation',
+                 'meta': 'Y-meta'}]
         # Backward compatibility to jedi<17
         line, column = pos_to_linecol(source, offset)
         proposals = run_with_debug(jedi, 'completions',
@@ -99,7 +124,7 @@ class JediBackend(object):
         if proposal is None:
             return None
         else:
-            return (proposal.module_path, proposal.line)
+            return (convert_posix_path(proposal.module_path), proposal.line)
 
     def rpc_get_docstring(self, filename, source, offset):
         line, column = pos_to_linecol(source, offset)
@@ -158,25 +183,25 @@ class JediBackend(object):
         # for int variables, so we remove them. See issue #76.
         locations = [
             loc for loc in locations
-            if (loc.module_path is not None
+            if (convert_posix_path(loc.module_path) is not None
                 and loc.module_name != 'builtins'
                 and loc.module_name != '__builtin__')]
         if len(locations) == 0:
             return None
         loc = locations[-1]
         try:
-            if loc.module_path == filename:
+            if convert_posix_path(loc.module_path) == filename:
                 offset = linecol_to_pos(source,
                                         loc.line,
                                         loc.column)
             else:
-                with open(loc.module_path) as f:
+                with open(convert_posix_path(loc.module_path)) as f:
                     offset = linecol_to_pos(f.read(),
                                             loc.line,
                                             loc.column)
         except IOError:  # pragma: no cover
             return None
-        return (loc.module_path, offset)
+        return (convert_posix_path(loc.module_path), offset)
 
     def rpc_get_definition_jedi16(self, filename, source, offset): # pragma: no cover
         # Backward compatibility to jedi<17
@@ -190,7 +215,7 @@ class JediBackend(object):
         # cases. See issue #76.
         if (
                 locations and
-                (locations[0].module_path is None
+                (convert_posix_path(locations[0].module_path) is None
                  or locations[0].module_name == 'builtins'
                  or locations[0].module_name == '__builtin__')
         ):
@@ -205,13 +230,13 @@ class JediBackend(object):
         else:
             loc = locations[-1]
             try:
-                if loc.module_path:
-                    if loc.module_path == filename:
+                if convert_posix_path(loc.module_path):
+                    if convert_posix_path(loc.module_path) == filename:
                         offset = linecol_to_pos(source,
                                                 loc.line,
                                                 loc.column)
                     else:
-                        with open(loc.module_path) as f:
+                        with open(convert_posix_path(loc.module_path)) as f:
                             offset = linecol_to_pos(f.read(),
                                                     loc.line,
                                                     loc.column)
@@ -219,7 +244,7 @@ class JediBackend(object):
                     return None
             except IOError:
                 return None
-            return (loc.module_path, offset)
+            return (convert_posix_path(loc.module_path), offset)
 
     def rpc_get_assignment(self, filename, source, offset):
         raise Fault("Obsolete since jedi 17.0. Please use 'get_definition'.")
@@ -237,13 +262,13 @@ class JediBackend(object):
         else:
             loc = locations[-1]
             try:
-                if loc.module_path:
-                    if loc.module_path == filename:
+                if convert_posix_path(loc.module_path):
+                    if convert_posix_path(loc.module_path) == filename:
                         offset = linecol_to_pos(source,
                                                 loc.line,
                                                 loc.column)
                     else:
-                        with open(loc.module_path) as f:
+                        with open(convert_posix_path(loc.module_path)) as f:
                             offset = linecol_to_pos(f.read(),
                                                     loc.line,
                                                     loc.column)
@@ -251,7 +276,7 @@ class JediBackend(object):
                     return None
             except IOError:
                 return None
-            return (loc.module_path, offset)
+            return (convert_posix_path(loc.module_path), offset)
 
     def rpc_get_calltip(self, filename, source, offset):
         line, column = pos_to_linecol(source, offset)
@@ -466,14 +491,14 @@ class JediBackend(object):
             return None
         result = []
         for use in uses:
-            if use.module_path == filename:
+            if convert_posix_path(use.module_path) == filename:
                 offset = linecol_to_pos(source, use.line, use.column)
-            elif use.module_path is not None:
-                with open(use.module_path) as f:
+            elif convert_posix_path(use.module_path) is not None:
+                with open(convert_posix_path(use.module_path)) as f:
                     text = f.read()
                 offset = linecol_to_pos(text, use.line, use.column)
             result.append({"name": use.name,
-                           "filename": use.module_path,
+                           "filename": convert_posix_path(use.module_path),
                            "offset": offset})
         return result
 
@@ -494,15 +519,15 @@ class JediBackend(object):
             return None
         result = []
         for use in uses:
-            if use.module_path == filename:
+            if convert_posix_path(use.module_path) == filename:
                 offset = linecol_to_pos(source, use.line, use.column)
-            elif use.module_path is not None:
-                with open(use.module_path) as f:
+            elif convert_posix_path(use.module_path) is not None:
+                with open(convert_posix_path(use.module_path)) as f:
                     text = f.read()
                 offset = linecol_to_pos(text, use.line, use.column)
 
             result.append({"name": use.name,
-                           "filename": use.module_path,
+                           "filename": convert_posix_path(use.module_path),
                            "offset": offset})
 
         return result
@@ -518,14 +543,14 @@ class JediBackend(object):
                                            'references': True})
         result = []
         for name in names:
-            if name.module_path == filename:
+            if convert_posix_path(name.module_path) == filename:
                 offset = linecol_to_pos(source, name.line, name.column)
-            elif name.module_path is not None:
-                with open(name.module_path) as f:
+            elif convert_posix_path(name.module_path) is not None:
+                with open(convert_posix_path(name.module_path)) as f:
                     text = f.read()
                 offset = linecol_to_pos(text, name.line, name.column)
             result.append({"name": name.name,
-                           "filename": name.module_path,
+                           "filename": convert_posix_path(name.module_path),
                            "offset": offset})
         return result
 
@@ -540,14 +565,14 @@ class JediBackend(object):
 
         result = []
         for name in names:
-            if name.module_path == filename:
+            if convert_posix_path(name.module_path) == filename:
                 offset = linecol_to_pos(source, name.line, name.column)
-            elif name.module_path is not None:
-                with open(name.module_path) as f:
+            elif convert_posix_path(name.module_path) is not None:
+                with open(convert_posix_path(name.module_path)) as f:
                     text = f.read()
                 offset = linecol_to_pos(text, name.line, name.column)
             result.append({"name": name.name,
-                           "filename": name.module_path,
+                           "filename": convert_posix_path(name.module_path),
                            "offset": offset})
         return result
 
@@ -566,9 +591,9 @@ class JediBackend(object):
             return {'success': False}
         else:
             return {'success': True,
-                    'project_path': ren._inference_state.project._path,
+                    'project_path': convert_posix_path(ren._inference_state.project._path),
                     'diff': ren.get_diff(),
-                    'changed_files': list(ren.get_changed_files().keys())}
+                    'changed_files': list(convert_posix_paths(ren.get_changed_files().keys()))}
 
     def rpc_get_extract_variable_diff(self, filename, source, offset, new_name,
                                       line_beg, line_end, col_beg, col_end):
@@ -587,9 +612,9 @@ class JediBackend(object):
             return {'success': False}
         else:
             return {'success': True,
-                    'project_path': ren._inference_state.project._path,
+                    'project_path': convert_posix_path(ren._inference_state.project._path),
                     'diff': ren.get_diff(),
-                    'changed_files': list(ren.get_changed_files().keys())}
+                    'changed_files': list(convert_posix_paths(ren.get_changed_files().keys()))}
 
     def rpc_get_extract_function_diff(self, filename, source, offset, new_name,
                                       line_beg, line_end, col_beg, col_end):
@@ -608,9 +633,9 @@ class JediBackend(object):
             return {'success': False}
         else:
             return {'success': True,
-                    'project_path': ren._inference_state.project._path,
+                    'project_path': convert_posix_path(ren._inference_state.project._path),
                     'diff': ren.get_diff(),
-                    'changed_files': list(ren.get_changed_files().keys())}
+                    'changed_files': list(convert_posix_paths(ren.get_changed_files().keys()))}
 
     def rpc_get_inline_diff(self, filename, source, offset):
         """Get the diff resulting from inlining the selected variable"""
@@ -626,9 +651,9 @@ class JediBackend(object):
             return {'success': False}
         else:
             return {'success': True,
-                    'project_path': ren._inference_state.project._path,
+                    'project_path': convert_posix_path(ren._inference_state.project._path),
                     'diff': ren.get_diff(),
-                    'changed_files': list(ren.get_changed_files().keys())}
+                    'changed_files': list(convert_posix_paths(ren.get_changed_files().keys()))}
 
 
 # From the Jedi documentation:
